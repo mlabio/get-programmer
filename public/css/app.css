@@ -9823,6 +9823,7 @@ body,
 }
 
 .brand-image {
+  float: left;
   line-height: .8;
   max-height: 34px;
   width: auto;
@@ -28137,5 +28138,10 @@ readers do not read off random characters that represent icons */
 
 .fab {
   font-family: 'Font Awesome 5 Brands';
+}
+
+.router-link-exact-active {
+  background-color: #975740;
+  color: #fff !important;
 }
 

@@ -5,9 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-
+  <link rel="shortcut icon" type="image/png" href="img/domain.png"/>
   <title>GetProgrammer</title>
   <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/global.css">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="hold-transition sidebar-mini">
@@ -29,7 +30,7 @@
 
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index3.html" class="brand-link">
-      <img src="./img/domain.png" alt="GetProgrammer Logo" class="brand-image img-circle elevation-3"
+      <img src="./img/domain.png" alt="GetProgrammer Logo" class="brand-image2 img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">GetProgrammer</span>
     </a>
@@ -55,7 +56,7 @@
             </router-link>
           </li>
           <li class="nav-item has-treeview menu-open">
-            <a href="#" class="nav-link active">
+            <a href="#" class="nav-link">
               <i class="fas fa-cog"></i>&nbsp;
               <p>
                 Management
@@ -64,7 +65,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="#" class="nav-link">
                   <i class="fa fa-circle-o nav-icon"></i>
                   <p>Active Page</p>
                 </a>
