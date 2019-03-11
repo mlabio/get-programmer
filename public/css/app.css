@@ -9823,9 +9823,9 @@ body,
 }
 
 .brand-image {
-/* float: left; */
+  float: left;
   line-height: .8;
-  max-height: 30px;
+  max-height: 34px;
   width: auto;
   margin-left: .8rem;
   margin-right: .5rem;

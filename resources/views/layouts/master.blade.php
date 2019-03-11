@@ -8,9 +8,10 @@
 
   <title>GetProgrammer</title>
   <link rel="stylesheet" href="/css/app.css">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="hold-transition sidebar-mini">
-<div class="wrapper">
+<div class="wrapper" id="app">
   <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -46,12 +47,12 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <router-link to="/dashboard" class="nav-link">
               <i class="fas fa-tachometer-alt"></i>&nbsp;
               <p>
                 Dashboard
               </p>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item has-treeview menu-open">
             <a href="#" class="nav-link active">
@@ -77,12 +78,12 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <router-link to="/profile" class="nav-link">
               <i class="fas fa-user-alt"></i>&nbsp;
               <p>
                 Profile
               </p>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -98,13 +99,9 @@
   </aside>
 
   <div class="content-wrapper">
-    <div class="content-header">
-      <div class="container-fluid">
-      </div>
-    </div>
-
     <div class="content">
       <div class="container-fluid">
+          <router-view></router-view>
       </div>
     </div>
   </div>
