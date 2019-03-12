@@ -55,7 +55,7 @@
               </p>
             </router-link>
           </li>
-          <li class="nav-item has-treeview menu-open">
+          <li class="nav-item has-treeview menu-close">
             <a href="#" class="nav-link">
               <i class="fas fa-cog"></i>&nbsp;
               <p>
@@ -65,16 +65,10 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Active Page</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Inactive Page</p>
-                </a>
+                <router-link to="/users" class="nav-link">
+                  <i class="fa fa-users nav-icon"></i>&nbsp;
+                  <p>Users</p>
+                </router-link>
               </li>
             </ul>
           </li>
@@ -87,12 +81,15 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-power-off"></i>&nbsp;
-              <p>
-                Logout
-              </p>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="nav-link">
+                <i class="fas fa-power-off"></i>&nbsp;
+                <p>
+                  Logout
+                </p>
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+            </form>
           </li>
         </ul>
       </nav>

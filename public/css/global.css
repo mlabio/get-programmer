@@ -6,3 +6,9 @@
     margin-right: .5rem;
     margin-top: -3px;
 }
+
+.table-title {
+  font-size: 2.25rem;
+  font-weight: 400;
+  margin: 0;
+}
