@@ -7,7 +7,7 @@
                         <h3 class="table-title">Users Table</h3>
 
                         <div class="card-tools">
-                            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#addNewUser"><i class="fas fa-user-plus"> Add User</i> </button>
+                            <button class="btn btn-success btn-sm" data-toggle="modal" @click="newModal"><i class="fas fa-user-plus"> Add User</i> </button>
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -33,7 +33,7 @@
                                     <td>{{user.created_at | filterDate}}</td>
                                     <td>{{user.status == 1 ? 'Admin' : 'Standard user'}}  </td>
                                     <td class="form-inline">
-                                        <button class="btn btn-primary btn-sm"><i class="fas fa-user-edit"></i></button>&nbsp;
+                                        <button class="btn btn-primary btn-sm" @click="editModal(user)"><i class="fas fa-user-edit"></i></button>&nbsp;
                                         <button class="btn btn-danger btn-sm" @click="deleteUser(user.id)"><i class="fas fa-user-times"></i></button>
                                     </td>
                                 </tr>
@@ -47,12 +47,13 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addNewUserModal">Add User</h5>
+                    <h5 v-show="!editmode" class="modal-title" id="addNewUserModal">Add User</h5>
+                    <h5 v-show="editmode" class="modal-title" id="addNewUserModal">Update User</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="createUser">
+                <form @submit.prevent="editmode ? updateUser() : createUser()">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -84,7 +85,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button v-show="!editmode" type="submit" class="btn btn-primary">Add</button>
+                        <button v-show="editmode" type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
                 </div>
@@ -97,6 +99,7 @@
     export default {
         data () {
             return {
+                editmode: false,
                 users: {},
                 errors: [],
                 form: new Form({
@@ -110,6 +113,17 @@
             }
         },
         methods: {
+            editModal(user) {   
+                this.form.reset();
+                this.editmode = true;
+                this.form.fill(user);
+                $('#addNewUser').modal('show');
+            },
+            newModal() {
+                this.form.reset();
+                this.editmode = false;
+                $('#addNewUser').modal('show');
+            },
             loadUsers() {
                 axios.get('api/user')
                 .then(response => {
@@ -117,6 +131,7 @@
                 })
             },
             createUser() {
+                this.$Progress.start();
                 this.form.post('api/user')
                 .then(function (response) {
                     if(response.data.id != null) {
@@ -126,17 +141,29 @@
                             type: 'success',
                             title: 'User Created Successfully'
                         })
+                        this.$Progress.finish();
                     }
                 })
-                .catch((error) => {
-                    Swal.fire(
-                        "Failed!",
-                        "There was something wrong",
-                        "Warning"
-                    )
+                .catch((error) => {})
+            },
+            updateUser() {
+                this.$Progress.start();
+                this.form.put('api/user/'+ this.form.id)
+                .then((response) => {
+                    $('#addNewUser').modal('hide');
+                    Fire.$emit('loadAllUsers');
+                    Toast.fire({
+                        type: 'success',
+                        title: 'User Updated Successfully'
+                    })
+                    this.$Progress.finish();
+                })
+                .catch(() => {
+                    this.$Progress.fail();
                 })
             },
             deleteUser(id) {
+                this.$Progress.start();
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -147,15 +174,17 @@
                     confirmButtonText: 'Yes, delete it!'
                 })
                 .then((result) => {
-                    this.form.delete('api/user/'+id)
-                    .then(()=> {
-                        Swal.fire(
-                        'Deleted',
-                        'Record has been deleted',
-                        'success'
-                        )
-                        Fire.$emit('loadAllUsers');
-                    })
+                    this.$Progress.start()
+                        this.form.delete('api/user/'+id)
+                        .then(()=> {
+                            Swal.fire(
+                            'Deleted',
+                            'Record has been deleted',
+                            'success'
+                            )
+                            Fire.$emit('loadAllUsers');
+                        })
+                    this.$Progress.finish()
                 })
                 .catch(() => {
                     swal(
