@@ -19,6 +19,7 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Bio</th>
+                                    <th>Registered At</th>
                                     <th>Status</th>
                                     <th>Modify</th>
                                 </tr>
@@ -29,10 +30,11 @@
                                     <td>{{user.name}}</td>
                                     <td>{{user.email}}</td>
                                     <td>{{user.bio}}</td>
+                                    <td>{{user.created_at | filterDate}}</td>
                                     <td>{{user.status == 1 ? 'Admin' : 'Standard user'}}  </td>
                                     <td class="form-inline">
                                         <button class="btn btn-primary btn-sm"><i class="fas fa-user-edit"></i></button>&nbsp;
-                                        <button class="btn btn-danger btn-sm"><i class="fas fa-user-times"></i></button>
+                                        <button class="btn btn-danger btn-sm" @click="deleteUser(user.id)"><i class="fas fa-user-times"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -96,6 +98,7 @@
         data () {
             return {
                 users: {},
+                errors: [],
                 form: new Form({
                     id: '',
                     name: '',
@@ -109,16 +112,74 @@
         methods: {
             loadUsers() {
                 axios.get('api/user')
-                    .then(response => {
-                        this. users = response.data.data;
-                    })
+                .then(response => {
+                    this. users = response.data.data;
+                })
             },
             createUser() {
-                this.form.post('api/user');      
+                this.form.post('api/user')
+                .then(function (response) {
+                    if(response.data.id != null) {
+                        $('#addNewUser').modal('hide');
+                        Fire.$emit('loadAllUsers');
+                        Toast.fire({
+                            type: 'success',
+                            title: 'User Created Successfully'
+                        })
+                    }
+                })
+                .catch((error) => {
+                    Swal.fire(
+                        "Failed!",
+                        "There was something wrong",
+                        "Warning"
+                    )
+                })
+            },
+            deleteUser(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                })
+                .then((result) => {
+                    this.form.delete('api/user/'+id)
+                    .then(()=> {
+                        Swal.fire(
+                        'Deleted',
+                        'Record has been deleted',
+                        'success'
+                        )
+                        Fire.$emit('loadAllUsers');
+                    })
+                })
+                .catch(() => {
+                    swal(
+                        "Failed!",
+                        "There was something wrong",
+                        "warning"
+                    )
+                })
+            }
+        },
+        filters :{
+            capitalize : function (value) {
+                value = value.toString();
+                return value.charAt(0).toUpperCase() + value.slice(1);                
+            },
+            filterDate: function (date) {
+               return moment(date).format('MMMM Do YYYY, h:mm:ss a');
             }
         },
         created() {
             this.loadUsers();
+            Fire.$on('loadAllUsers', () => {
+                this.loadUsers();
+            })
         }
     }
 </script>
