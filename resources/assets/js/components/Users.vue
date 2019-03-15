@@ -127,7 +127,7 @@
             loadUsers() {
                 axios.get('api/user')
                 .then(response => {
-                    this. users = response.data.data;
+                    this.users = response.data.data;
                 })
             },
             createUser() {

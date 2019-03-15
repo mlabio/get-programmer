@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('api');
+    }
     public function index() {
         return User::latest()->paginate(10);
     }
@@ -32,7 +36,7 @@ class UserController extends Controller
     }
 
     public function show($id) {
-        
+        return auth('api')->user();
     }   
 
     public function update(Request $request, $id) {
