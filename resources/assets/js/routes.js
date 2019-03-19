@@ -22,8 +22,14 @@ const routes = [
     component: require('./components/Users.vue')
   },
   {
+    path: '/admin-settings',
+    name: 'skills',
+    title: 'Skills',
+    component: require('./components/Admin-settings.vue')
+  },
+  {
     path: '*',
-    redirect: { name: 'dashboard' },
+    redirect: { name: 'profile' },
   },
 ];
 

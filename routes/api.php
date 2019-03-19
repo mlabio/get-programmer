@@ -18,7 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::apiResources([
-    'user' => 'API\UserController'
+    'user' => 'API\UserController',
+    'admin-settings' => 'API\SkillsController'
 ]);
 
-Route::get('profile', 'API\UserController@show');
+Route::get('profile', 'API\ProfileController@show');

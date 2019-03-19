@@ -145,6 +145,7 @@
                     }
                 })
                 .catch((error) => {})
+                this.$Progress.finish();
             },
             updateUser() {
                 this.$Progress.start();

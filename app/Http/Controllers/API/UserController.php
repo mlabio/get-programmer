@@ -36,7 +36,7 @@ class UserController extends Controller
     }
 
     public function show($id) {
-        return auth('api')->user();
+        //return auth('api')->user();
     }   
 
     public function update(Request $request, $id) {
