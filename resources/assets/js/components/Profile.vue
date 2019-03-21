@@ -59,7 +59,6 @@
                                 <hr>
 
                                 <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
                                 <p>
                                     <span class="label label-danger">UI Design</span>
                                     <span class="label label-success">Coding</span>
@@ -79,71 +78,51 @@
                     <div class="col-md-9">
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                                <!-- <li class="active"><a href="#Info" data-toggle="tab">Information</a></li> -->
                                 <li class="active"><a href="#skills" data-toggle="tab">Skills</a></li>
                                 <li><a href="#projects" data-toggle="tab">Porfolio/Projects</a></li>
                             </ul>
                             <div class="tab-content">
-                                <!-- <div class="active tab-pane" id="Info">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <form class="form-horizontal">
-                                                <div class="form-group">
-                                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                                                    <div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="inputName" placeholder="Name">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-
-                                                    <div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputName2" class="col-sm-2 control-label">Name</label>
-
-                                                    <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="inputName2" placeholder="Name">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-
-                                                    <div class="col-sm-10">
-                                                    <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-
-                                                    <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-2 col-sm-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                        <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                                                        </label>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-2 col-sm-10">
-                                                    <button type="submit" class="btn btn-danger">Submit</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        
-                                    </div>
-                                </div> -->
                                 <div class="active tab-pane" id="skills">
-                                    
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3>
+                                                Your Skills
+                                            </h3>
+                                        </div>
+                                        <form @submit.prevent="addUserSkills">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <multiselect v-model="skillSelected" 
+                                                                placeholder="Select Skills" 
+                                                                label="skill_name" 
+                                                                track-by="id" 
+                                                                :close-on-select="false"
+                                                                :options="options" 
+                                                                :multiple="true">
+                                                    </multiselect>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card card-info">
+                                        <div class="card-header">
+                                            <h4>Skills</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card">
+                                               <div class="card-body" v-for="skill in currentSkills" :key="skill.id">
+                                                   <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            {{skill.skill_name}}
+                                                        </h3>
+                                                   </div>
+                                               </div>
+                                            </div>  
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane" id="projects">
                                     
@@ -157,28 +136,66 @@
     </div>
 </template>
 
+<style scoped>
+    .color-palette {
+      height: 35px;
+      line-height: 35px;
+      text-align: center;
+    }
+</style>
+
+
 <script>
     export default {
         data () {
             return {
-                user: new Form({
+                skillSelected: {},
+                options: [],
+                userSkills:{
                     id: '',
-                    name: '',
-                    email: '',
-                    password: '',
-                    bio: '',
-                    status: ''
-                })
+                    user_id: 1,
+                    skills: []
+                },
+                currentSkills: {}   
             }
         },
         created () {
-            axios.get('api/profile')
-            .then(function (data) {
+            this.loadAllSkills();
+            this.loadUserSkills();
+
+            Fire.$on('loadAllUserSkills', () => {
+                this.loadUserSkills();
             })
         },
+        methods : {
+            loadAllSkills() {
+                axios.get('api/admin-settings')
+                .then((response) => {
+                    this.options = response.data;
+                })
+            },
+            loadUserSkills() {
+                axios.get('api/profile/' + this.userSkills.user_id)
+                .then((response) => {
+                    this.currentSkills = response.data.user_skill;
+                })
+            },
+            addUserSkills() {
+                this.userSkills.skills = this.skillSelected;
+                
+                axios.post('api/profile', this.userSkills)
+                .then((response) => {
+                    Toast.fire({
+                        type: 'success',
+                        title: 'Successfully added User Skills'
+                    })
+                    this.skillSelected = {};
+                    Fire.$emit('loadAllUserSkills');
+                    
+                })
+            }
+        },
         mounted () {
-            
         }
     }
-    
 </script>

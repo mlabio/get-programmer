@@ -14,7 +14,7 @@ class UserController extends Controller
         $this->middleware('api');
     }
     public function index() {
-        return User::latest()->paginate(10);
+        return User::latest()->paginate(5);
     }
 
     public function store(Request $request) {

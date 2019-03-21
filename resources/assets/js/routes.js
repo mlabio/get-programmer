@@ -29,7 +29,9 @@ const routes = [
   },
   {
     path: '*',
-    redirect: { name: 'profile' },
+    name: 'NotFound',
+    title: 'NotFound',
+    component: require('./components/NotFound.vue')
   },
 ];
 

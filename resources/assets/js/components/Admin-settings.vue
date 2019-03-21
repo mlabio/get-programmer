@@ -108,7 +108,7 @@
             loadSkills() {
                 axios.get('api/admin-settings')
                 .then((response) => {
-                    this.skills = response.data.data;
+                    this.skills = response.data;
                 })
             },
             editSkill(user) {

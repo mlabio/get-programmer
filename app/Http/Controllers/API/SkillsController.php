@@ -5,11 +5,17 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Skills;
+use Illuminate\Support\Facades\DB;
 
 class SkillsController extends Controller
 {
     public function index() {
-        return Skills::latest()->paginate(10);
+        $skills = DB::table('skills')
+                    ->select('id', 'skill_name')
+                    ->orderBy('id', 'asc')
+                    ->get();
+
+        return $skills;
     }
 
     public function store(Request $request) {

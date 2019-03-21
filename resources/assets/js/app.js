@@ -6,10 +6,13 @@ import { Form, HasError, AlertError } from 'vform';
 import VueProgressBar from 'vue-progressbar';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-
+import Multiselect from 'vue-multiselect'
+    
 //global
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('multiselect', Multiselect)
 
 const Toast = Swal.mixin({
     toast: true,
@@ -37,6 +40,7 @@ window.Swal = Swal;
 window.Form = Form;
 window.moment = moment;
 window.Fire = new Vue();
+
 //dependencies
 Vue.use(VueProgressBar, options)
 
@@ -44,3 +48,4 @@ const app = new Vue({
     el: '#app',
     router
 });
+

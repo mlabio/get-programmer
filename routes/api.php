@@ -12,14 +12,12 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::apiResources([
-    'user' => 'API\UserController',
-    'admin-settings' => 'API\SkillsController'
+    'users' => 'API\UserController',
+    'admin-settings' => 'API\SkillsController',
+    'profile' => 'API\UserSkillsController'
 ]);
-
-Route::get('profile', 'API\ProfileController@show');
