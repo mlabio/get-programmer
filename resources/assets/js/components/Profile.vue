@@ -58,31 +58,23 @@
 
                                 <hr>
 
-                                <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-                                <p>
-                                    <span class="label label-danger">UI Design</span>
-                                    <span class="label label-success">Coding</span>
-                                    <span class="label label-info">Javascript</span>
-                                    <span class="label label-warning">PHP</span>
-                                    <span class="label label-primary">Node.js</span>
-                                </p>
-
-                                <hr>
-
-                                <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                                <strong><i class="fas fa-pencil-alt"></i> Skills</strong>
+                                <p class="text-muted">
+                                    <span class="label label-info col-sm-3" v-for="skill in currentSkills" :key="skill.id">
+                                        {{skill.skill_name}}
+                                    </span>
+                                </p>                              
                             </div>
                         </div>
                     </div>
                     <div class="col-md-9">
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#skills" data-toggle="tab">Skills</a></li>
-                                <li><a href="#projects" data-toggle="tab">Porfolio/Projects</a></li>
+                                <li class=""><a href="#skills" data-toggle="tab">Skills</a></li>
+                                <li class="active"><a href="#projects" data-toggle="tab">Porfolio/Projects</a></li>
                             </ul>
                             <div class="tab-content">
-                                <div class="active tab-pane" id="skills">
+                                <div class="tab-pane" id="skills">
                                     <div class="card">
                                         <div class="card-header">
                                             <h3>
@@ -96,39 +88,88 @@
                                                                 placeholder="Select Skills" 
                                                                 label="skill_name" 
                                                                 track-by="id" 
-                                                                :close-on-select="false"
                                                                 :options="options" 
                                                                 :multiple="true">
                                                     </multiselect>
                                                 </div>
                                             </div>
                                             <div class="card-footer">
-                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                <button type="submit" class="btn btn-primary">Add Skill</button>
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="card card-info">
+                                </div>
+                                <div class="active tab-pane" id="projects">
+                                    <div class="card">
                                         <div class="card-header">
-                                            <h4>Skills</h4>
+                                            <button class="btn btn-primary" data-toggle="modal" @click="newProject"><i class="fas fa-plus-square"> Add Project</i></button>
                                         </div>
                                         <div class="card-body">
-                                            <div class="card">
-                                               <div class="card-body" v-for="skill in currentSkills" :key="skill.id">
-                                                   <div class="card-header">
-                                                        <h3 class="card-title">
-                                                            {{skill.skill_name}}
-                                                        </h3>
-                                                   </div>
-                                               </div>
-                                            </div>  
+                                            <div id="accordion">
+                                            
+                                                <div class="card card-primary">
+                                                    <div class="card-header">
+                                                    <h4 class="card-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                        Collapsible Group Item #1
+                                                        </a>
+                                                    </h4>
+                                                    </div>
+                                                    <div id="collapseOne" class="panel-collapse collapse">
+                                                    <div class="card-body">
+                                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                                                        3
+                                                        wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                                                        laborum
+                                                        eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                                                        nulla
+                                                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                                                        nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
+                                                        beer
+                                                        farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                                        labore sustainable VHS.
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <!-- /.card-body -->
                                     </div>
-                                </div>
-                                <div class="tab-pane" id="projects">
-                                    
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addNewProject" tabindex="-1" role="dialog" aria-labelledby="addNewProjectlabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addNewProjectlabel" v-show="!editmode">New Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form @submit.prevent="addNewProject"></form>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="text" name="project_name" class="form-control" placeholder="Project Name">
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="project_description" rows="10" class="form-control" placeholder="Project Description"></textarea>
+                                </div>
+                                <div class="form-group">
+                                   <textarea name="project_tools" rows="10" class="form-control" placeholder="Tools and Technologies used"></textarea> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button v-show="!editmode"  type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
             </div>
@@ -149,27 +190,36 @@
     export default {
         data () {
             return {
-                skillSelected: {},
+                skillSelected: null,
+                editmode: false,
                 options: [],
                 userSkills:{
                     id: '',
                     user_id: 1,
                     skills: []
                 },
-                currentSkills: {}   
+                currentSkills: {},
+                skillsArr: []   
             }
         },
         created () {
             this.loadAllSkills();
             this.loadUserSkills();
+            this.getSomething();
 
+            Fire.$on('loadAllSkills', function () {
+                this.loadAllSkills();
+            })
             Fire.$on('loadAllUserSkills', () => {
                 this.loadUserSkills();
             })
         },
         methods : {
+            getSomething() {
+                axios.get('api/custom');
+            },
             loadAllSkills() {
-                axios.get('api/admin-settings')
+                axios.get('api/admin-settings/'+ this.userSkills.user_id)
                 .then((response) => {
                     this.options = response.data;
                 })
@@ -189,10 +239,14 @@
                         type: 'success',
                         title: 'Successfully added User Skills'
                     })
-                    this.skillSelected = {};
+                    this.skillSelected = null;
                     Fire.$emit('loadAllUserSkills');
-                    
+                    Fire.$emit('loadAllSkills');
                 })
+            },
+            newProject() {
+                this.editmode = false;
+                $('#addNewProject').modal('show');
             }
         },
         mounted () {

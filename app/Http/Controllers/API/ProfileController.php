@@ -10,14 +10,11 @@ use Illuminate\Http\Response;
 
 class ProfileController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('api');
-    }
+    public function show(Request $request,$next) {
+        $user = Auth::user();
 
-    public function show() {
-        $user = auth()->user();
-
-        return $user;
+        if($user) {
+            return $next($request);
+        }
     }
 }

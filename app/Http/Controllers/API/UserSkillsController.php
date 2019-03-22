@@ -4,12 +4,25 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\UserSkill;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UserSkillsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('api');
+    }
+
+    public function index () {
+        $user = Auth::user();
+
+        return response()->json($user, 200);
+    }
+    
     public function store(Request $request) {
         for($a = 0; $a < count($request->skills); $a++) {
             $data = array(
@@ -48,8 +61,6 @@ class UserSkillsController extends Controller
         );
 
         return $data;
-        // $res = array_diff($skills, $user_skill);
-
-        // return $res;
     }
+
 }

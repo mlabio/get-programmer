@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Skills;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use function GuzzleHttp\json_decode;
 
 class SkillsController extends Controller
 {
@@ -30,8 +32,18 @@ class SkillsController extends Controller
         
     }
 
-    public function show($id) {
-        //return auth('api')->user();
+    public function show($user_id) {
+        
+        $userskills = DB::table('userskills')->where('user_id', '=', $user_id)->select('skill_id')->get();
+
+        $ids = $userskills->map(function($userskill){ 
+            return (int)$userskill->skill_id;
+        });
+
+        $skills = DB::table('skills')->whereNotIn('skills.id', $ids)->get();
+
+        return $skills;
+
     }   
 
     public function update(Request $request, $id) {

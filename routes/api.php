@@ -21,3 +21,10 @@ Route::apiResources([
     'admin-settings' => 'API\SkillsController',
     'profile' => 'API\UserSkillsController'
 ]);
+
+
+Route::group([
+    'middleware' => 'auth'
+], function() {
+    Route::get('custom', 'API\ProfileController@show');
+});
